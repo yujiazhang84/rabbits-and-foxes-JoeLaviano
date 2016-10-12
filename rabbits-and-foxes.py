@@ -257,6 +257,7 @@ print("The IQR of the second fox peak is between the range ",Quartile1," and ",Q
 
 print("The probability that foxes die out is ",FDeathCount/trials*100,"%.")
 
+
 # pull request practice
 print("Pull Request Practice")
 
