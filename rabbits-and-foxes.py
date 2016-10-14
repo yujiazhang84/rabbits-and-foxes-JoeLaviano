@@ -66,7 +66,7 @@
 
 # In[1]:
 
-# %matplotlib inline
+get_ipython().magic('matplotlib inline')
 import numpy as np
 from matplotlib import pyplot as plt
 
@@ -256,10 +256,6 @@ print("The IQR of the second fox peak is between the range ",Quartile1," and ",Q
 # In[25]:
 
 print("The probability that foxes die out is ",FDeathCount/trials*100,"%.")
-
-
-# pull request practice
-print("Pull Request Practice")
 
 
 # In[ ]:
