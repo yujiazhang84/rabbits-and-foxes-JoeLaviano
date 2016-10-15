@@ -4,7 +4,9 @@
 
 import numpy as np
 from matplotlib import pyplot as plt
-import random
+import time
+import pstats
+#import random
 
 # Intializing Constants
 k1 = 0.015 #days^-1 Growth of Rabbits
@@ -18,7 +20,7 @@ days = 600
 # Initialize Counter for Extinction Case
 FDeathCount = 0
 RDeathCount = 0
-trials = 1000
+trials = 500
 
 # Initialize Arrays for Second Peak Calculations
 SecondPeak = []
@@ -46,6 +48,7 @@ for i in range(trials):
         if KMCR[-1] == 0:
             #Rabbits are Dead
             RDeathCount = RDeathCount + 1
+            FDeathCount = FDeathCount + 1
             break
         elif KMCF[-1] == 0:
             #Foxes are Dead
@@ -93,14 +96,18 @@ print("Foxes died out ",FDeathCount," times and Rabbits died out ",RDeathCount,"
 
 # In[2]:
 
-AvgSecondPeak = np.average(SecondPeak)
+#AvgSecondPeak = np.average(SecondPeak)
 
 # My way of getting around the extinction time problem, can't be the best way
+NewSecondPeak = []
 NewTimeSecondPeak = []
 
-for j in range (trials-1):
+for j in range (trials):
     if TimeSecondPeak[j]>200:
+        NewSecondPeak.append(SecondPeak[j])
         NewTimeSecondPeak.append(TimeSecondPeak[j])
+
+AvgSecondPeak = np.average(NewSecondPeak)
 AvgTimeSecondPeak = np.average(NewTimeSecondPeak)
 
 print("The second peak occurs (on average) at ",AvgTimeSecondPeak," days, with the peak value: ",AvgSecondPeak)
@@ -119,4 +126,4 @@ print("The IQR of the second fox peak is between the range ",Quartile1," and ",Q
 
 # In[4]:
 
-print("The probability that foxes die out is ",FDeathCount/trials*100,"%.")
+print("The probability that foxes die out is ",float(FDeathCount)/float(trials)*100,"%.")
