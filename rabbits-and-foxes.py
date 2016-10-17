@@ -131,4 +131,4 @@ print("The IQR of the second fox peak is between the range ", Quartile1, " and "
 # In[4]:
 
 # Outputs
-print("The probability that foxes die out is ", float(FDeathCount)/float(trials)*100, "%.")     #has to convert "FDeathCount" and "trials" to float
+print("The probability that foxes die out is ", FDeathCount/trials*100, "%.")
