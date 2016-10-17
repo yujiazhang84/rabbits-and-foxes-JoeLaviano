@@ -31,68 +31,55 @@ TimeSecondPeak = []
 for i in range(trials):
 
     # Reset for Each Trial
+    rabbits = R0
+    foxes = F0
     t = [0]
-    KMCR = [R0]
-    KMCF = [F0]
+    KMCR = [rabbits]
+    KMCF = [foxes]
 
     while t[-1] < days:
 
         # Rates multiply by the last item in the array (Most Recent Population)
-        Rb = k1 * KMCR[-1]
-        Rd = k2 * KMCR[-1] * KMCF[-1]
-        Fb = k3 * KMCR[-1] * KMCF[-1]
-        Fd = k4 * KMCF[-1]
+        Rb = k1 * rabbits
+        Rd = k2 * rabbits * foxes
+        Fb = k3 * rabbits * foxes
+        Fd = k4 * foxes
         TotalRate = Rb + Rd + Fb + Fd
 
         # Generate Random Number
         Rando = np.random.rand() * TotalRate
 
-        if KMCR[-1] == 0:
+        if rabbits == 0:
             # Rabbits are Dead
             RDeathCount = RDeathCount + 1
             FDeathCount = FDeathCount + 1
             break
-        elif KMCF[-1] == 0:
+        elif foxes == 0:
             # Foxes are Dead
             FDeathCount = FDeathCount + 1
             break
         if Rando < Rb:
             # Rabbit is Born
-            KMCR.append(KMCR[-1] + 1)
-            KMCF.append(KMCF[-1])
-<<<<<<< HEAD
-            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
-=======
-            #use random.expovariate to speed up
-            t.append(t[-1] + random.expovariate(TotalRate))
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
+            rabbits = rabbits + 1
+            KMCR.append(rabbits)
+            KMCF.append(foxes)
+
         elif Rando < (Rb + Rd):
             # Rabbit Dies
-            KMCR.append(KMCR[-1] - 1)
-            KMCF.append(KMCF[-1])
-<<<<<<< HEAD
-            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
-=======
-            t.append(t[-1] + random.expovariate(TotalRate))
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
+            rabbits = rabbits -1
+            KMCR.append(rabbits)
         elif Rando < (Rb + Rd + Fb):
             # Fox is Born
-            KMCR.append(KMCR[-1])
-            KMCF.append(KMCF[-1] + 1)
-<<<<<<< HEAD
-            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
-=======
-            t.append(t[-1] + random.expovariate(TotalRate))
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
+            foxes = foxes + 1
+            KMCR.append(rabbits)
+            KMCF.append(foxes)
         elif Rando < TotalRate:
             # FoxDies
-            KMCR.append(KMCR[-1])
-            KMCF.append(KMCF[-1] - 1)
-<<<<<<< HEAD
-            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
-=======
-            t.append(t[-1] + random.expovariate(TotalRate))
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
+            foxes = foxes - 1
+            KMCR.append(rabbits)
+            KMCF.append(foxes)
+        #use random.expovariate to speed up and move it out of the loop
+        t.append(t[-1] + random.expovariate(TotalRate))
 
     # Getting Second Peaks and Second Peak Times for each Trial
     KMCSecondHalf = KMCF[len(KMCF) // 2:]
@@ -115,15 +102,6 @@ for i in range(trials):
 #    TimeSecondPeak.append(Peak2Location)
 
     # Stole plotting on the same graph from @Justin
-<<<<<<< HEAD
-    plt.plot(t, KMCR, 'b')
-    plt.plot(t, KMCF, 'r')
-# plt.legend(loc='best')
-
-plt.xlabel('Days')
-plt.ylabel('Population')
-plt.show()
-=======
 #    plt.plot(t,KMCR,'b')
 #    plt.plot(t,KMCF,'r')
 #    plt.legend(loc='best')
@@ -131,7 +109,6 @@ plt.show()
 # plt.xlabel('Days')
 # plt.ylabel('Population')
 # plt.show()
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
 print("Foxes died out ", FDeathCount, " times and Rabbits died out ", RDeathCount, " times.")
 
 # In[2]:
@@ -142,22 +119,14 @@ print("Foxes died out ", FDeathCount, " times and Rabbits died out ", RDeathCoun
 NewSecondPeak = []
 NewTimeSecondPeak = []
 
-<<<<<<< HEAD
-for j in range(trials - 1):
-    if TimeSecondPeak[j] > 200:
-=======
 for j in range(trials):
     if TimeSecondPeak[j] > 200:
         NewSecondPeak.append(SecondPeak[j])
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
         NewTimeSecondPeak.append(TimeSecondPeak[j])
 
-<<<<<<< HEAD
-=======
 AvgSecondPeak = np.average(NewSecondPeak)
 AvgTimeSecondPeak = np.average(NewTimeSecondPeak)
 
->>>>>>> f9ef82b1cc3db90ec3d252add0273949ee8dc3a1
 print("The second peak occurs (on average) at ", AvgTimeSecondPeak, " days, with the peak value: ", AvgSecondPeak)
 
 # In[3]:
