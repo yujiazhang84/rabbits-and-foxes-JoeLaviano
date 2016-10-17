@@ -6,10 +6,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 import random
 
-# #import cProfile
-# import time
-# import pstats
-
 # Intializing Constants
 k1 = 0.015  # days^-1 Growth of Rabbits
 k2 = 0.00004  # days^-1foxes^-1 Rabbits eaten by foxes
@@ -50,7 +46,6 @@ for i in range(trials):
         if KMCR[-1] == 0:
             # Rabbits are Dead
             RDeathCount = RDeathCount + 1
-            FDeathCount = FDeathCount + 1
             break
         elif KMCF[-1] == 0:
             # Foxes are Dead
@@ -60,23 +55,22 @@ for i in range(trials):
             # Rabbit is Born
             KMCR.append(KMCR[-1] + 1)
             KMCF.append(KMCF[-1])
-            #use random.expovariate to speed up
-            t.append(t[-1] + random.expovariate(TotalRate))
+            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
         elif Rando < (Rb + Rd):
             # Rabbit Dies
             KMCR.append(KMCR[-1] - 1)
             KMCF.append(KMCF[-1])
-            t.append(t[-1] + random.expovariate(TotalRate))
+            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
         elif Rando < (Rb + Rd + Fb):
             # Fox is Born
             KMCR.append(KMCR[-1])
             KMCF.append(KMCF[-1] + 1)
-            t.append(t[-1] + random.expovariate(TotalRate))
+            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
         elif Rando < TotalRate:
             # FoxDies
             KMCR.append(KMCR[-1])
             KMCF.append(KMCF[-1] - 1)
-            t.append(t[-1] + random.expovariate(TotalRate))
+            t.append(t[-1] + ((1 / TotalRate) * np.log(1 / np.random.rand())))
 
     # Getting Second Peaks and Second Peak Times for each Trial
     KMCSecondHalf = KMCF[len(KMCF) // 2:]
@@ -86,42 +80,26 @@ for i in range(trials):
     Timeslot = KMCSecondHalf.index(Peak2)
     TimeSecondPeak.append(TSecondHalf[Timeslot])
 
-# I tried converting list to array here, but it didn't help with speeding up...
-#    arrayF = np.array(KMCF)
-#    arrayT = np.array(t)
-#    HalfArrayF = np.array_split(arrayF, 2)
-#    HalfArrayT = np.array_split(arrayF, 2)
-#    KMCFSecondHalf = HalfArrayF[1]
-#    TSecondHalf = HalfArrayT[1]
-#    Peak2 = np.max(KMCFSecondHalf)
-#    Peak2Location = TSecondHalf[KMCFSecondHalf.argmax()]
-#    SecondPeak.append(Peak2)
-#    TimeSecondPeak.append(Peak2Location)
-
     # Stole plotting on the same graph from @Justin
-#    plt.plot(t,KMCR,'b')
-#    plt.plot(t,KMCF,'r')
-#    plt.legend(loc='best')
+    plt.plot(t, KMCR, 'b')
+    plt.plot(t, KMCF, 'r')
+# plt.legend(loc='best')
 
-# plt.xlabel('Days')
-# plt.ylabel('Population')
-# plt.show()
+plt.xlabel('Days')
+plt.ylabel('Population')
+plt.show()
 print("Foxes died out ", FDeathCount, " times and Rabbits died out ", RDeathCount, " times.")
 
 # In[2]:
 
-# AvgSecondPeak = np.average(SecondPeak)
+AvgSecondPeak = np.average(SecondPeak)
 
 # My way of getting around the extinction time problem, can't be the best way
-NewSecondPeak = []
 NewTimeSecondPeak = []
 
-for j in range(trials):
+for j in range(trials - 1):
     if TimeSecondPeak[j] > 200:
-        NewSecondPeak.append(SecondPeak[j])
         NewTimeSecondPeak.append(TimeSecondPeak[j])
-
-AvgSecondPeak = np.average(NewSecondPeak)
 AvgTimeSecondPeak = np.average(NewTimeSecondPeak)
 
 print("The second peak occurs (on average) at ", AvgTimeSecondPeak, " days, with the peak value: ", AvgSecondPeak)
@@ -138,4 +116,4 @@ print("The IQR of the second fox peak is between the range ", Quartile1, " and "
 
 # In[4]:
 
-print("The probability that foxes die out is ", float(FDeathCount) / float(trials) * 100, "%.")
+print("The probability that foxes die out is ", FDeathCount / trials * 100, "%.")
